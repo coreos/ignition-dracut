@@ -1,10 +1,16 @@
 [Unit]
 Description=Ignition (files)
 DefaultDependencies=false
-Before=initrd-parse-etc.service
+#Before=initrd-parse-etc.service # on ostree systems, the real config is in the deployment root's /etc
 
 Requires=initrd-root-fs.target
 After=initrd-root-fs.target
+
+# we need to run after ostree-prepare-root sets up the deployment root at
+# /sysroot, but *before* we switch to it
+After=ostree-prepare-root.service
+Before=initrd-switch-root.target
+Before=initrd-switch-root.service
 
 #Requires=ignition-setup.service ignition-disks.service
 #After=ignition-setup.service ignition-disks.service
