@@ -1,16 +1,16 @@
 [Unit]
 Description=Ignition (record completion)
 DefaultDependencies=false
-Before=initrd.target
+#Before=initrd.target
 
-Requires=ignition-disks.service
-After=ignition-disks.service
+#Requires=ignition-disks.service
+#After=ignition-disks.service
 
 Requires=ignition-files.service
 After=ignition-files.service
 
-Requires=sysroot-boot.service
-After=sysroot-boot.service
+#Requires=sysroot-boot.service
+#After=sysroot-boot.service
 
 [Service]
 Type=oneshot
