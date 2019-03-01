@@ -23,6 +23,9 @@ copy_file_if_exists "/usr/lib/ignition/platform/${PLATFORM_ID}/base.ign" "${dest
 # but we don't unmount boot because we are run in a systemd unit
 # with MountFlags=slave so it is unmounted for us.
 bootmnt=/mnt/boot_partition
-mkdir -p $bootmnt
-mount /dev/disk/by-label/boot $bootmnt
+bootdev=/dev/disk/by-label/boot
+if [ -e $bootdev ]; then
+    mkdir -p $bootmnt
+    mount $bootdev $bootmnt
+fi
 copy_file_if_exists "${bootmnt}/ignition/config.ign" "${destination}/user.ign"
