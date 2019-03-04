@@ -2,9 +2,7 @@
 Description=Mark boot complete
 Documentation=https://github.com/coreos/ignition
 ConditionKernelCommandLine=ignition.firstboot
-RequiresMountsFor=/boot
-# on EFI systems the file is under /boot/efi/
-ConditionPathIsMountPoint=!/boot/efi
+RequiresMountsFor=/boot/efi
 
 [Service]
 Type=oneshot
@@ -19,7 +17,7 @@ RemainAfterExit=yes
 # detected this file. Fail if we are unable to remove it, rather than risking
 # rerunning Ignition at next boot.
 MountFlags=slave
-ExecStart=/bin/sh -c 'mount -o remount,rw /boot && rm /boot/ignition.firstboot'
+ExecStart=/bin/sh -c 'mount -o remount,rw /boot/efi && rm /boot/efi/ignition.firstboot'
 
 [Install]
 WantedBy=multi-user.target
