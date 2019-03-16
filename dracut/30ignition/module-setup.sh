@@ -11,7 +11,6 @@ install() {
         chroot \
         groupadd \
         id \
-        ignition \
         mkfs.ext4 \
         mkfs.vfat \
         mkfs.xfs \
@@ -31,6 +30,11 @@ install() {
 
 #   inst_script "$moddir/retry-umount.sh" \
 #       "/usr/sbin/retry-umount"
+
+    # Distro packaging is expected to install the ignition binary into the
+    # module directory.
+    inst_simple "$moddir/ignition" \
+        "/usr/bin/ignition"
 
     inst_simple "$moddir/ignition-generator" \
         "$systemdutildir/system-generators/ignition-generator"
