@@ -59,6 +59,9 @@ install() {
 
 #   inst_simple "$moddir/coreos-static-network.service" \
 #       "$systemdsystemunitdir/coreos-static-network.service"
+
+    # needed for openstack config drive support
+    inst_rules 60-cdrom_id.rules
 }
 
 has_fw_cfg_module() {
