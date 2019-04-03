@@ -4,8 +4,13 @@ Description=Remount /sysroot read-write for Ignition
 # commandline and thus mount the root filesystem ro by default. In
 # this case, remount /sysroot to rw (issue #37)
 DefaultDependencies=no
+Before=initrd.target
 After=sysroot.mount
 ConditionPathIsReadWrite=!/sysroot
+
+# Make sure if ExecStart= fails, the boot fails
+OnFailure=emergency.target
+OnFailureJobMode=isolate
 
 [Service]
 Type=oneshot
