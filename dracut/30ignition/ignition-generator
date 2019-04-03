@@ -32,6 +32,11 @@ add_requires() {
     ln -sf "../${name}" "${requires_dir}/${name}"
 }
 
+# exit early if the installer is active
+if [[ $(cmdline_arg coreos.inst) == "yes" ]]; then
+    exit 0
+fi
+
 # This can't be done with ConditionKernelCommandLine because that always
 # starts the unit's dependencies. We want to start networkd only on first
 # boot.
