@@ -7,8 +7,13 @@
 [Unit]
 Description=Ask OSTree to mount /var in initramfs
 DefaultDependencies=false
+Before=initrd.target
 After=basic.target
 Before=ostree-prepare-root.service
+
+# Make sure if ExecStart= fails, the boot fails
+OnFailure=emergency.target
+OnFailureJobMode=isolate
 
 [Service]
 Type=oneshot
