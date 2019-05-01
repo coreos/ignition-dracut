@@ -63,6 +63,10 @@ install() {
     inst_script "$moddir/coreos-populate-var.sh" \
         "/usr/sbin/coreos-populate-var"
 
+    install_ignition_unit coreos-teardown-initramfs-network.service
+    inst_script "$moddir/coreos-teardown-initramfs-network.sh" \
+	"/usr/bin/coreos-teardown-initramfs-network"
+
     # needed for openstack config drive support
     inst_rules 60-cdrom_id.rules
 }
