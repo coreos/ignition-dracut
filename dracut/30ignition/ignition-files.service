@@ -33,11 +33,5 @@ After=ignition-disks.service
 [Service]
 Type=oneshot
 EnvironmentFile=/run/ignition.env
+ExecStart=/usr/bin/coreos-populate-var
 ExecStart=/usr/bin/ignition --root=/sysroot --oem=${OEM_ID} --stage=files --log-to-stdout
-# Hack to just always relabel /var on first boot. This is run by
-# systemd-tmpfiles shortly after mounting things, so there isn't a lot of data
-# yet in it. See https://bugzilla.redhat.com/show_bug.cgi?id=1699107. Ideally,
-# systemd would learn to do this at mount time to avoid race conditions. See:
-# https://github.com/systemd/systemd/pull/11903
-ExecStart=/usr/bin/mkdir -p /run/tmpfiles.d
-ExecStart=/usr/bin/sh -c "echo 'Z /var - - -' > /run/tmpfiles.d/var-relabel.conf"

@@ -36,6 +36,9 @@ install() {
     inst_simple "$moddir/ignition" \
         "/usr/bin/ignition"
 
+    inst_simple "$moddir/coreos-populate-var.sh" \
+        "/usr/bin/coreos-populate-var"
+
     inst_simple "$moddir/ignition-generator" \
         "$systemdutildir/system-generators/ignition-generator"
 
