@@ -1,0 +1,8 @@
+## Ignition can load a user embedded config file from
+## /boot/ignition/config.ign.
+## If /boot and / are located on different partitions set this option to
+## add a dependency for a device with the "boot" label.
+## Type:        yesno
+## Default:     no
+
+SEPARATE_BOOT_PARTITION=yes

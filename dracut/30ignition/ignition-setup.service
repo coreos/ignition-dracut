@@ -8,7 +8,6 @@ Before=local-fs-pre.target
 Before=ignition-disks.service
 Before=ignition-files.service
 
-Wants=dev-disk-by\x2dlabel-boot.device
 After=dev-disk-by\x2dlabel-boot.device
 
 [Service]

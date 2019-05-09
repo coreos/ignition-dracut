@@ -5,6 +5,11 @@
 set -e
 
 UNIT_DIR="${1:-/tmp}"
+IGNITION_CONF="/etc/ignition.conf"
+
+if [ -e "${IGNITION_CONF}" ]; then
+    source "${IGNITION_CONF}"
+fi
 
 cmdline=( $(</proc/cmdline) )
 cmdline_arg() {
@@ -19,6 +24,11 @@ cmdline_arg() {
 
 cmdline_bool() {
     local value=$(cmdline_arg "$@")
+    return $(parse_bool "$value")
+}
+
+parse_bool() {
+    local value="$1"
     case "$value" in
         ""|0|no|off) return 1;;
         *) return 0;;
@@ -37,6 +47,9 @@ add_requires() {
 # boot.
 if $(cmdline_bool 'ignition.firstboot' 0); then
     add_requires ignition-complete.target
+    if parse_bool "${SEPARATE_BOOT_PARTITION}"; then
+        add_requires 'dev-disk-by\x2dlabel-boot.device'
+    fi
 fi
 
 echo "PLATFORM_ID=$(cmdline_arg ignition.platform.id)" > /run/ignition.env

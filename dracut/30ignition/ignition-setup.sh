@@ -22,7 +22,7 @@ copy_file_if_exists "/usr/lib/ignition/platform/${PLATFORM_ID}/base.ign" "${dest
 # under $bootmnt/ignition/config.ign. Note that we mount /boot
 # but we don't unmount boot because we are run in a systemd unit
 # with MountFlags=slave so it is unmounted for us.
-bootmnt=/mnt/boot_partition
+bootmnt=/boot
 bootdev=/dev/disk/by-label/boot
 if [ -e $bootdev ]; then
     mkdir -p $bootmnt
