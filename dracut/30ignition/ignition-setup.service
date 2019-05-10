@@ -8,7 +8,8 @@ Before=local-fs-pre.target
 Before=ignition-disks.service
 Before=ignition-files.service
 
-After=dev-disk-by\x2dlabel-boot.device
+Requires=ignition-config.target
+After=ignition-config.target
 
 [Service]
 Type=oneshot

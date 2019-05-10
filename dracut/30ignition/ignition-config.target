@@ -1,0 +1,8 @@
+[Unit]
+Description=Ignition (config)
+DefaultDependencies=false
+Before=ignition-complete.target
+
+Requires=local-fs-pre.target
+Before=local-fs-pre.target
+Before=ignition-setup.service

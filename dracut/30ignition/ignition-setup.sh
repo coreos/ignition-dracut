@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+IGNITION_CONF="/etc/ignition.conf"
+if [ -e "${IGNITION_CONF}" ]; then
+    source "${IGNITION_CONF}"
+fi
+
 copy_file_if_exists() {
     src="${1}"; dst="${2}"
     if [ -f "${src}" ]; then
@@ -22,9 +27,9 @@ copy_file_if_exists "/usr/lib/ignition/platform/${PLATFORM_ID}/base.ign" "${dest
 # under $bootmnt/ignition/config.ign. Note that we mount /boot
 # but we don't unmount boot because we are run in a systemd unit
 # with MountFlags=slave so it is unmounted for us.
-bootmnt=/boot
-bootdev=/dev/disk/by-label/boot
-if [ -e $bootdev ]; then
+bootmnt=/mnt/user_config
+bootdev="${USER_CONFIG_DEVICE}"
+if [ -e "$bootdev" ]; then
     mkdir -p $bootmnt
     mount $bootdev $bootmnt
 fi

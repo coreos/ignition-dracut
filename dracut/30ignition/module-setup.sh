@@ -48,6 +48,9 @@ install() {
     inst_simple "$moddir/ignition-complete.target" \
         "$systemdsystemunitdir/ignition-complete.target"
 
+    inst_simple "$moddir/ignition-config.target" \
+        "$systemdsystemunitdir/ignition-config.target"
+
     mkdir -p "$initdir/$systemdsystemunitdir/ignition-complete.target.requires"
 
     install_ignition_unit ignition-setup.service
