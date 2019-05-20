@@ -27,7 +27,8 @@ install() {
         useradd \
         usermod \
         realpath \
-        touch
+        touch \
+        jq
 
     # This one is optional; https://src.fedoraproject.org/rpms/ignition/pull-request/9
     inst_multiple -o mkfs.btrfs
@@ -56,6 +57,8 @@ install() {
 
     # needed for openstack config drive support
     inst_rules 60-cdrom_id.rules
+
+    inst_hook cmdline 00 "$moddir/ignition-cmdline.sh"
 }
 
 has_fw_cfg_module() {
