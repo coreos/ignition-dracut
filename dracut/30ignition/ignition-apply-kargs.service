@@ -1,0 +1,18 @@
+[Unit]
+Description=Reboot after Ignition to apply kargs
+Documentation=https://github.com/coreos/ignition-dracut
+DefaultDependencies=false
+Before=ignition-complete.target
+
+OnFailure=emergency.target
+OnFailureJobMode=isolate
+
+# Make sure /sysroot/ostree/deploy/ is not empty
+Requires=ostree-prepare-root.service
+# Make sure /sysroot/etc/ostree/kargs.d exists if there are default kernel args
+After=ignition-files.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/ignition-apply-kargs

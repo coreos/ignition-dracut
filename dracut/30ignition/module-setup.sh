@@ -27,13 +27,17 @@ install() {
         useradd \
         usermod \
         realpath \
-        touch
+        touch \
+        ostree
 
     # This one is optional; https://src.fedoraproject.org/rpms/ignition/pull-request/9
     inst_multiple -o mkfs.btrfs
 
     inst_script "$moddir/ignition-setup.sh" \
         "/usr/sbin/ignition-setup"
+
+    inst_script "$moddir/ignition-apply-kargs.sh" \
+        "/usr/sbin/ignition-apply-kargs"
 
     # Distro packaging is expected to install the ignition binary into the
     # module directory.
@@ -53,6 +57,7 @@ install() {
     install_ignition_unit ignition-mount.service
     install_ignition_unit ignition-files.service
     install_ignition_unit ignition-remount-sysroot.service
+    install_ignition_unit ignition-apply-kargs.service
 
     # needed for openstack config drive support
     inst_rules 60-cdrom_id.rules
