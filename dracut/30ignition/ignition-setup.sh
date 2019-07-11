@@ -1,11 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-IGNITION_CONF="/etc/ignition.conf"
-if [ -e "${IGNITION_CONF}" ]; then
-    source "${IGNITION_CONF}"
-fi
-
 copy_file_if_exists() {
     src="${1}"; dst="${2}"
     if [ -f "${src}" ]; then

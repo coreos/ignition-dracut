@@ -4,11 +4,6 @@
 
 set -e
 
-IGNITION_CONF="/etc/ignition.conf"
-if [ -e "${IGNITION_CONF}" ]; then
-    source "${IGNITION_CONF}"
-fi
-
 UNIT_DIR="${1:-/tmp}"
 
 cmdline=( $(</proc/cmdline) )
@@ -46,7 +41,7 @@ add_dropin_dep() {
     local systemd_dep=$(systemd-escape --path --suffix=device "$1")
     local dropin_dir="${UNIT_DIR}/ignition-config.target.d"
     mkdir -p "${dropin_dir}"
-    if parse_bool "${REQUIRE_USER_CONFIG_DEVICE}"; then
+    if cmdline_bool "ignition.userconf.dev.required"; then
         dep_type="Requires"
     else
         dep_type="Wants"
@@ -57,6 +52,8 @@ ${dep_type}=${systemd_dep}
 After=${systemd_dep}
 EOF
 }
+
+USER_CONFIG_DEVICE="$(cmdline_arg ignition.userconf.dev)"
 
 # Detecting firstboot can't be done with ConditionKernelCommandLine because
 # that always starts the unit's dependencies. We want to start networking
@@ -69,3 +66,4 @@ if $(cmdline_bool 'ignition.firstboot' 0); then
 fi
 
 echo "PLATFORM_ID=$(cmdline_arg ignition.platform.id)" > /run/ignition.env
+echo "USER_CONFIG_DEVICE=\"${USER_CONFIG_DEVICE}\"" >> /run/ignition.env

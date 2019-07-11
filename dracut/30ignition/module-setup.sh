@@ -32,8 +32,6 @@ install() {
     # This one is optional; https://src.fedoraproject.org/rpms/ignition/pull-request/9
     inst_multiple -o mkfs.btrfs
 
-    inst_multiple -o "/etc/ignition.conf"
-
     inst_script "$moddir/ignition-setup.sh" \
         "/usr/sbin/ignition-setup"
 

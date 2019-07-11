@@ -16,6 +16,7 @@ RemainAfterExit=yes
 # Also regarding the lack of `-f` for rm ; we should have only run if GRUB
 # detected this file. Fail if we are unable to remove it, rather than risking
 # rerunning Ignition at next boot.
+EnvironmentFile=/run/ignition.env
 MountFlags=slave
 ExecStart=/bin/sh -c 'if mountpoint -q /boot; then mount -o remount,rw /boot; fi && rm /boot/ignition.firstboot'
 
