@@ -20,5 +20,5 @@ if [ -f "(${bootpart})/ignition.firstboot" ]; then
     source "(${bootpart})/ignition.firstboot"
     
     # we support setting variables in the 
-    set ignition_firstboot="ignition.firstboot $ignition_network_kcmdline"
+    set ignition_firstboot="ignition.firstboot $ignition_network_kcmdline $ignition_extra_kcmdline"
 fi
