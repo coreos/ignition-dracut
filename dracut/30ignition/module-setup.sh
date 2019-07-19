@@ -68,6 +68,8 @@ install() {
 
     # needed for openstack config drive support
     inst_rules 60-cdrom_id.rules
+
+    inst_hook pre-pivot 90 "$moddir/persist-ifcfg.sh"
 }
 
 has_fw_cfg_module() {
