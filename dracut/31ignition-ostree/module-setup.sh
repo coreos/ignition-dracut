@@ -15,7 +15,9 @@ install_ignition_unit() {
 install() {
     inst_multiple \
         systemd-sysusers \
-        systemd-tmpfiles
+        systemd-tmpfiles \
+        ostree tar chattr \
+        jq
 
     mkdir -p "$initdir/$systemdsystemunitdir/ignition-complete.target.requires"
 
@@ -26,4 +28,9 @@ install() {
     install_ignition_unit ignition-ostree-populate-var.service
     inst_script "$moddir/ignition-ostree-populate-var.sh" \
         "/usr/sbin/ignition-ostree-populate-var"
+    inst_script "$moddir/ignition-ostree-dracut-rootfs.sh" \
+        "/usr/libexec/ignition-ostree-dracut-rootfs"
+    install_ignition_unit ignition-ostree-rootfs-detect.service
+    install_ignition_unit ignition-ostree-rootfs-save.service
+    install_ignition_unit ignition-ostree-rootfs-restore.service
 }
