@@ -2,7 +2,6 @@
 Description=Ignition (fetch)
 DefaultDependencies=false
 Before=ignition-complete.target
-After=basic.target
 
 # Run after ignition-setup has run because ignition-setup
 # may copy in new/different ignition configs for us to consume.
