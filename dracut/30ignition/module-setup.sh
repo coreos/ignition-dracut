@@ -28,9 +28,6 @@ install() {
     inst_script "$moddir/ignition-setup.sh" \
         "/usr/sbin/ignition-setup"
 
-    inst_script "$moddir/coreos-teardown-initramfs-network.sh" \
-	"/usr/sbin/coreos-teardown-initramfs-network"
-
 #   inst_script "$moddir/retry-umount.sh" \
 #       "/usr/sbin/retry-umount"
 
@@ -53,9 +50,6 @@ install() {
 
     inst_simple "$moddir/ignition-remount-sysroot.service" \
         "$systemdutildir/system/ignition-remount-sysroot.service"
-
-    inst_simple "$moddir/coreos-teardown-initramfs-network.service" \
-        "$systemdutildir/system/coreos-teardown-initramfs-network.service"
 
 #   inst_simple "$moddir/sysroot-boot.service" \
 #       "$systemdsystemunitdir/sysroot-boot.service"
