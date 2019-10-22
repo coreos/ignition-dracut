@@ -9,6 +9,8 @@ set -euo pipefail
 if ! [ -z "$(ls /sys/class/net)" ]; then
     for f in /sys/class/net/*; do
         interface=$(basename "$f")
+        # Skip bond interface brought up by initramfs
+        if [ "$interface" == "bonding_masters" ]; then continue; fi
         ip link set $interface down
         ip addr flush dev $interface
         rm -f -- /tmp/net.$interface.did-setup
