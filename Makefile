@@ -5,7 +5,7 @@ all:
 .PHONY: install
 install: all
 	for x in dracut/*; do \
-	  if ! [ -d "${x}" ]; then continue; fi; \
+	  if ! [ -d "$${x}" ]; then continue; fi; \
 	  bn=$$(basename $$x); \
 	  install -D -t $(DESTDIR)/usr/lib/dracut/modules.d/$${bn} $$x/*; \
 	done
