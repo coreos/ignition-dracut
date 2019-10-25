@@ -37,7 +37,7 @@ persist_ifcfg() {
     # ifcfg files, so that users don't have to write the config in both kernel
     # commandline *and* Ignition.
     if ! $(cmdline_bool 'coreos.no_persist_ip' 0); then
-        cp /tmp/ifcfg/* /sysroot/etc/sysconfig/network-scripts/
+        cp -n /tmp/ifcfg/* /sysroot/etc/sysconfig/network-scripts/
     fi
 }
 
