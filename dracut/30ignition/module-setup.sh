@@ -45,6 +45,9 @@ install() {
     inst_simple "$moddir/ignition-disks.service" \
         "$systemdsystemunitdir/ignition-disks.service"
 
+    inst_simple "$moddir/ignition-fetch.service" \
+        "$systemdsystemunitdir/ignition-fetch.service"
+
     inst_simple "$moddir/ignition-files.service" \
         "$systemdsystemunitdir/ignition-files.service"
 
