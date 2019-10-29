@@ -38,6 +38,7 @@ persist_ifcfg() {
     # commandline *and* Ignition.
     if ! $(cmdline_bool 'coreos.no_persist_ip' 0); then
         cp -n /tmp/ifcfg/* /sysroot/etc/sysconfig/network-scripts/
+        echo -ne '/etc/sysconfig/network-scripts/\0' >> /sysroot/etc/selinux/ignition.relabel
     fi
 }
 
