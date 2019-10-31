@@ -60,6 +60,9 @@ install() {
     inst_simple "$moddir/coreos-teardown-initramfs-network.service" \
         "$systemdutildir/system/coreos-teardown-initramfs-network.service"
 
+    inst_simple "$moddir/ignition-subsequent.target" \
+        "$systemdsystemunitdir/ignition-subsequent.target"
+
 #   inst_simple "$moddir/sysroot-boot.service" \
 #       "$systemdsystemunitdir/sysroot-boot.service"
 
