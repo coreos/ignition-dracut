@@ -24,5 +24,7 @@ copy_file_if_exists "${destination}/platform/${OEM_ID}/base.ign" "${destination}
 # with MountFlags=slave so it is unmounted for us.
 bootmnt=/mnt/boot_partition
 mkdir -p $bootmnt
-mount /dev/disk/by-label/boot $bootmnt
+# mount as read-only since we don't strictly need write access and we may be
+# running alongside other code that also has it mounted ro
+mount -o ro /dev/disk/by-label/boot $bootmnt
 copy_file_if_exists "${bootmnt}/ignition/config.ign" "${destination}/user.ign"
