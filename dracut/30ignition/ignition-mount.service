@@ -1,0 +1,31 @@
+[Unit]
+Description=Ignition (mount) [stub]
+DefaultDependencies=false
+Before=ignition-complete.target
+
+# This a copy of ignition-mount.service from master, but it does
+# nothing right now.  We just keep the dependencies to ensure
+# other services are ordered correctly.
+
+# Make sure ExecStop= runs before we switch root
+Before=initrd-switch-root.target
+
+# Make sure if ExecStop= fails, the boot fails
+OnFailure=emergency.target
+OnFailureJobMode=isolate
+
+# Make sure the final /sysroot is ready first, since we're mounting under there
+Requires=initrd-root-fs.target
+After=initrd-root-fs.target
+
+# Make sure root filesystem is remounted read-write if needed
+After=ignition-remount-sysroot.service
+
+# This is guaranteed through After=initrd-root-fs.target but just to
+# be explicit.
+After=ignition-disks.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/true
