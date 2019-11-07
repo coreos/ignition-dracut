@@ -51,6 +51,9 @@ install() {
     inst_simple "$moddir/ignition-files.service" \
         "$systemdsystemunitdir/ignition-files.service"
 
+    inst_simple "$moddir/ignition-mount.service" \
+        "$systemdsystemunitdir/ignition-mount.service"
+
     inst_simple "$moddir/ignition-ask-var-mount.service" \
         "$systemdsystemunitdir/ignition-ask-var-mount.service"
 
@@ -59,6 +62,11 @@ install() {
 
     inst_simple "$moddir/coreos-teardown-initramfs-network.service" \
         "$systemdutildir/system/coreos-teardown-initramfs-network.service"
+
+    inst_simple "$moddir/ignition-complete.target" \
+        "$systemdsystemunitdir/ignition-complete.target"
+    inst_simple "$moddir/ignition-subsequent.target" \
+        "$systemdsystemunitdir/ignition-subsequent.target"
 
 #   inst_simple "$moddir/sysroot-boot.service" \
 #       "$systemdsystemunitdir/sysroot-boot.service"
