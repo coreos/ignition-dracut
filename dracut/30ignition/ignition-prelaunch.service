@@ -1,0 +1,19 @@
+[Unit]
+Description=Ignition (validate first run)
+DefaultDependencies=false
+Before=ignition-complete.target
+After=basic.target
+
+Before=ignition-fetch.service
+
+Requires=dev-disk-by\x2dlabel-boot.device
+After=dev-disk-by\x2dlabel-boot.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+MountFlags=slave
+TemporaryFileSystem=/run/boot
+# Flag completion of Ignition, so that we can immediately error out if we detect we started
+ExecStart=/bin/sh -c 'mount -o ro /dev/disk/by-label/boot /run/boot && if [ -f /run/boot/ignition.state ]; then echo -n "Detected previous run of Ignition:" $(cat /run/boot/ignition.state); exit 1; fi'
+

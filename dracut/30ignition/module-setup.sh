@@ -59,7 +59,8 @@ install() {
     inst_simple "$moddir/ignition-generator" \
         "$systemdutildir/system-generators/ignition-generator"
 
-    for x in "complete" "subsequent" "diskful" "diskful-subsequent"; do
+    for x in "complete" "subsequent" "diskful" "diskful-subsequent"
+             "prelaunch" "started" "finished"; do
         inst_simple "$moddir/ignition-$x.target" \
             "$systemdsystemunitdir/ignition-$x.target"
     done

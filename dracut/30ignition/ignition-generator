@@ -52,6 +52,11 @@ if $(cmdline_bool 'ignition.firstboot' 0); then
 Requires=dev-disk-by\x2dlabel-boot.device
 After=dev-disk-by\x2dlabel-boot.device
 EOF
+
+        # And these units write to /boot too
+        for unit in prelaunch started finished; do
+            add_requires ignition-${unit}.service ignition-complete.target
+        done
     fi
 else
     # If we're doing a non-Ignition (subsequent) boot, then

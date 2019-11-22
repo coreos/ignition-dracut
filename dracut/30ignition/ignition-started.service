@@ -1,0 +1,18 @@
+[Unit]
+Description=Ignition (log initiation)
+DefaultDependencies=false
+Before=ignition-complete.target
+After=basic.target
+
+# Run after ignition-setup has run because ignition-setup
+# may copy in new/different ignition configs for us to consume.
+After=ignition-fetch.service
+Before=ignition-disks.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+MountFlags=slave
+TemporaryFileSystem=/run/boot
+# Flag initiation of Ignition, so that we can immediately error out if we detect we started
+ExecStart=/bin/sh -c 'mount /dev/disk/by-label/boot /run/boot && echo started > /run/boot/ignition.state'

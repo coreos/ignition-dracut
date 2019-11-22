@@ -1,0 +1,15 @@
+[Unit]
+Description=Ignition (log completion)
+DefaultDependencies=false
+Before=ignition-complete.target
+After=basic.target
+
+After=ignition-files.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+MountFlags=slave
+TemporaryFileSystem=/run/boot
+# Flag completion of Ignition, so that we can immediately error out if we detect we started
+ExecStart=/bin/sh -c 'mount /dev/disk/by-label/boot /run/boot && echo completed > /run/boot/ignition.state'
