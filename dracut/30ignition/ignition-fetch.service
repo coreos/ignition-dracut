@@ -16,4 +16,6 @@ After=network.target
 Type=oneshot
 RemainAfterExit=yes
 EnvironmentFile=/run/ignition.env
-ExecStart=/usr/bin/ignition --root=/sysroot --platform=${PLATFORM_ID} --stage=fetch
+EnvironmentFile=/usr/lib/os-release
+ExecStart=/usr/bin/ignition --root=/sysroot --platform=${PLATFORM_ID} --stage=fetch \
+          --fetch-header ignition-os-id=${ID} --fetch-header ignition-os-version-id=${VERSION_ID}
