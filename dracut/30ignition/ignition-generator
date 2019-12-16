@@ -115,4 +115,9 @@ if [[ "${oemid}" == "digitalocean" ]]; then
     add_requires coreos-digitalocean-network.service
 fi
 
+# Force openstack on s390x since fwd_config isn't available
+if [[ $(uname -m) = s390x && "${oemid}" == "qemu" ]]; then
+  oem_id=openstack
+fi
+
 echo "OEM_ID=${oemid}" > /run/ignition.env
