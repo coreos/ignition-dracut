@@ -61,4 +61,10 @@ else
     add_requires ignition-subsequent.target initrd.target
 fi
 
-echo "PLATFORM_ID=$(cmdline_arg ignition.platform.id)" > /run/ignition.env
+if [[ $(uname -m) = s390x ]]; then
+  PLATFORM_ID=openstack
+else
+  PLATFORM_ID=$(cmdline_arg ignition.platform.id)
+fi
+
+echo "PLATFORM_ID=$PLATFORM_ID" > /run/ignition.env
