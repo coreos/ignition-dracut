@@ -4,15 +4,30 @@
 
 set -euo pipefail
 
+down_interface() {
+    ip link set $1 down
+    ip addr flush dev $1
+    rm -f -- /tmp/net.$1.did-setup
+}
+
+# We want to take down the bonded interfaces first
+if [ -f "/sys/class/net/bonding_masters" ]; then
+    bonds="$(cat /sys/class/net/bonding_masters)"
+    for b in ${bonds[@]}; do
+        down_interface ${b}
+        echo -"${b}" > /sys/class/net/bonding_masters
+     done
+fi
+
 # Clean up the interfaces set up in the initramfs
 # This mimics the behaviour of dracut's ifdown() in net-lib.sh
 if ! [ -z "$(ls /sys/class/net)" ]; then
     for f in /sys/class/net/*; do
         interface=$(basename "$f")
-        # Skip bond interface brought up by initramfs
+        # The `bonding_masters` entry is not a true interface and thus
+        # cannot be taken down.  If they existed, the bonded interfaces
+        # were taken down earlier in this script.
         if [ "$interface" == "bonding_masters" ]; then continue; fi
-        ip link set $interface down
-        ip addr flush dev $interface
-        rm -f -- /tmp/net.$interface.did-setup
+        down_interface $interface
     done
 fi
