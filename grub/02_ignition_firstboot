@@ -10,7 +10,7 @@ search --set=bootpart --label boot
 set ignition_firstboot=""
 if [ -f "(${bootpart})/ignition.firstboot" ]; then
     # default to dhcp networking parameters to be used with ignition 
-    set ignition_network_kcmdline='rd.neednet=1 ip=dhcp'
+    set ignition_network_kcmdline='rd.neednet=1 ip=dhcp,dhcp6'
 
     # source in the `ignition.firstboot` file which could override the
     # above $ignition_network_kcmdline with static networking config.
