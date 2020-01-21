@@ -29,7 +29,7 @@ persist_ifcfg() {
     # via Ignition, as was supported in OpenShift 4.1.  See
     # https://bugzilla.redhat.com/show_bug.cgi?id=1736875
     ip=$(cmdline_arg ip)
-    if [ "${ip}" = "dhcp" ]; then
+    if [ "${ip}" = "dhcp" ] || [ "${ip}" = "dhcp,dhcp6" ]; then
         return 0
     fi
 
