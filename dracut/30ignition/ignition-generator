@@ -52,6 +52,9 @@ else
     # like `ignition-ostree-mount-sysroot.service`
     # can cleanly distinguish between the two.
     add_requires ignition-subsequent.target initrd.target
+    if ! command -v is-live-image >/dev/null || ! is-live-image; then
+        add_requires ignition-diskful-subsequent.target ignition-subsequent.target
+    fi
 fi
 
 # Write ignition-setup.service customized for PXE/ISO or regular boot
