@@ -42,21 +42,6 @@ if $(cmdline_bool 'ignition.firstboot' 0); then
         add_requires ignition-${svc}.service ignition-complete.target
     done
     add_requires coreos-teardown-initramfs-network.service ignition-complete.target
-    #if [[ $(cmdline_arg coreos.oem.id) == "packet" ]]; then
-    #    add_requires coreos-static-network.service
-    #fi
-
-    # On EC2, shut down systemd-networkd if ignition fails so that the instance
-    # fails EC2 instance checks.
-    #if [[ $(cmdline_arg coreos.oem.id) == "ec2" ]]; then
-    #    mkdir -p ${UNIT_DIR}/systemd-networkd.service.d
-    #    cat > ${UNIT_DIR}/systemd-networkd.service.d/10-conflict-emergency.conf <<EOF
-#[Unit]
-#Conflicts=emergency.target
-#Conflicts=emergency.service
-#Conflicts=dracut-emergency.service
-#EOF
-    #fi
 else
     # If we're doing a non-Ignition (subsequent) boot, then
     # queue a different target.  This is necessary so that units
@@ -109,10 +94,6 @@ if [ -z "${oemid}" ]; then
         gcp) oemid=gce;;
         *) oemid=${platformid}
     esac
-fi
-
-if [[ "${oemid}" == "digitalocean" ]]; then
-    add_requires coreos-digitalocean-network.service
 fi
 
 echo "OEM_ID=${oemid}" > /run/ignition.env
