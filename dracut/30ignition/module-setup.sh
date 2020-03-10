@@ -51,15 +51,6 @@ install() {
     inst_simple "$moddir/ignition-generator" \
         "$systemdutildir/system-generators/ignition-generator"
 
-    inst_simple "$moddir/ignition-fetch.service" \
-        "$systemdsystemunitdir/ignition-fetch.service"
-
-    inst_simple "$moddir/ignition-ask-var-mount.service" \
-        "$systemdsystemunitdir/ignition-ask-var-mount.service"
-
-    inst_simple "$moddir/ignition-remount-sysroot.service" \
-        "$systemdutildir/system/ignition-remount-sysroot.service"
-
     inst_simple "$moddir/coreos-teardown-initramfs-network.service" \
         "$systemdutildir/system/coreos-teardown-initramfs-network.service"
 
@@ -72,6 +63,7 @@ install() {
     install_ignition_unit ignition-disks.service
     install_ignition_unit ignition-mount.service
     install_ignition_unit ignition-files.service
+    install_ignition_unit ignition-ask-var-mount.service ignition-diskful.target
     install_ignition_unit ignition-remount-sysroot.service ignition-diskful.target
 
     # needed for openstack config drive support
