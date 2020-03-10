@@ -59,6 +59,7 @@ install() {
             "$systemdsystemunitdir/ignition-$x.target"
     done
 
+    install_ignition_unit ignition-setup.service ignition-diskful.target
     install_ignition_unit ignition-fetch.service
     install_ignition_unit ignition-disks.service
     install_ignition_unit ignition-mount.service
