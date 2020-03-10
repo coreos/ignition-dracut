@@ -2,6 +2,8 @@
 # -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # ex: ts=8 sw=4 sts=4 et filetype=sh
 
+type info >/dev/null 2>&1 || . /lib/net-lib.sh
+
 cmdline=( $(</proc/cmdline) )
 
 cmdline_arg() {
@@ -31,6 +33,34 @@ persist_ifcfg() {
     ip=$(cmdline_arg ip)
     if [ "${ip}" = "dhcp" ] || [ "${ip}" = "dhcp,dhcp6" ]; then
         return 0
+    fi
+
+    # Persist the hostname if the admin has elected to use the dracut method of
+    # defining the IP on the commandline, but only if Ignition hasn't set the hostname.
+    hpath="/sysroot/etc/hostname"
+    hname=$(< /proc/sys/kernel/hostname)
+    if [ ! -f "${hpath}" ]; then
+        for iface in $(ls /sys/class/net)
+        do
+            # Find the totems indicating that dracut set up the interface
+            iface_totems="/run/initramfs/net.${iface}"
+            [ -f "${iface_totems}.did-setup" ] || continue;
+            [ -f "${iface_totems}.hostname" ] || continue;
+
+            # The format of the file is _the command used to set the hostname_
+            # echo hostname > /proc/sys/kernel/hostname.
+            read _ iface_hostname _ < "${iface_totems}.hostname"
+
+            # Ensure that the hostname used by the kernel is the same one
+            # used by this interface. This guard is intended to protect against
+            # mixed `ip=` or where one is set via dhcp.
+            if [ "${iface_hostname}" == "${hname}" ]; then
+                echo "${hname}" > "${hpath}"
+                echo -ne '/etc/hostname/\0' >> /sysroot/etc/selinux/ignition.relabel
+                info "persisting hostname set by kargs for ${iface}"
+                break
+            fi
+        done
     fi
 
     # Unless overridden, propagate the kernel commandline networking into
