@@ -3,8 +3,8 @@ Description=Generate new UUID for disk GPT %I
 DefaultDependencies=no
 Before=local-fs-pre.target systemd-fsck-root.service
 Before=ignition-diskful.target
-Wants=systemd-udevd.service
-After=systemd-udevd.service
+Wants=systemd-udevd.service multipathd.service
+After=systemd-udevd.service multipathd.service
 Requires=%i.device
 After=%i.device
 # Run before services that use device nodes, preventing them from racing
