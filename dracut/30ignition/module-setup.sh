@@ -6,6 +6,15 @@ depends() {
     echo qemu systemd url-lib network
 }
 
+install_ignition_unit() {
+    local unit="$1"; shift
+    local target="${1:-ignition-complete.target}"; shift
+    local instantiated="${1:-$unit}"; shift
+    inst_simple "$moddir/$unit" "$systemdsystemunitdir/$unit"
+    mkdir -p "$initdir/$systemdsystemunitdir/$target.requires"
+    ln_r "../$unit" "$systemdsystemunitdir/$target.requires/$instantiated"
+}
+
 install() {
     inst_multiple \
         chroot \
@@ -42,40 +51,21 @@ install() {
     inst_simple "$moddir/ignition-generator" \
         "$systemdutildir/system-generators/ignition-generator"
 
-    inst_simple "$moddir/ignition-disks.service" \
-        "$systemdsystemunitdir/ignition-disks.service"
-
-    inst_simple "$moddir/ignition-fetch.service" \
-        "$systemdsystemunitdir/ignition-fetch.service"
-
-    inst_simple "$moddir/ignition-files.service" \
-        "$systemdsystemunitdir/ignition-files.service"
-
-    inst_simple "$moddir/ignition-mount.service" \
-        "$systemdsystemunitdir/ignition-mount.service"
-
-    inst_simple "$moddir/ignition-ask-var-mount.service" \
-        "$systemdsystemunitdir/ignition-ask-var-mount.service"
-
-    inst_simple "$moddir/ignition-remount-sysroot.service" \
-        "$systemdutildir/system/ignition-remount-sysroot.service"
-
     inst_simple "$moddir/coreos-teardown-initramfs-network.service" \
         "$systemdutildir/system/coreos-teardown-initramfs-network.service"
 
-    inst_simple "$moddir/ignition-complete.target" \
-        "$systemdsystemunitdir/ignition-complete.target"
-    inst_simple "$moddir/ignition-subsequent.target" \
-        "$systemdsystemunitdir/ignition-subsequent.target"
+    for x in "complete" "subsequent" "diskful" "diskful-subsequent"; do
+        inst_simple "$moddir/ignition-$x.target" \
+            "$systemdsystemunitdir/ignition-$x.target"
+    done
 
-#   inst_simple "$moddir/sysroot-boot.service" \
-#       "$systemdsystemunitdir/sysroot-boot.service"
-
-#   inst_simple "$moddir/coreos-digitalocean-network.service" \
-#       "$systemdsystemunitdir/coreos-digitalocean-network.service"
-
-#   inst_simple "$moddir/coreos-static-network.service" \
-#       "$systemdsystemunitdir/coreos-static-network.service"
+    install_ignition_unit ignition-setup.service ignition-diskful.target
+    install_ignition_unit ignition-fetch.service
+    install_ignition_unit ignition-disks.service
+    install_ignition_unit ignition-mount.service
+    install_ignition_unit ignition-files.service
+    install_ignition_unit ignition-ask-var-mount.service ignition-diskful.target
+    install_ignition_unit ignition-remount-sysroot.service ignition-diskful.target
 
     # needed for openstack config drive support
     inst_rules 60-cdrom_id.rules

@@ -38,9 +38,13 @@ add_requires() {
 # boot.
 if $(cmdline_bool 'ignition.firstboot' 0); then
     add_requires ignition-complete.target initrd.target
-    for svc in fetch disks files mount ask-var-mount; do
-        add_requires ignition-${svc}.service ignition-complete.target
-    done
+
+    # Invoke distro hook for detecting whether we're booted from a live image,
+    # and therefore won't have a root disk.
+    if ! command -v is-live-image >/dev/null || ! is-live-image; then
+        add_requires ignition-diskful.target ignition-complete.target
+    fi
+
     add_requires coreos-teardown-initramfs-network.service ignition-complete.target
 else
     # If we're doing a non-Ignition (subsequent) boot, then
@@ -48,36 +52,10 @@ else
     # like `ignition-ostree-mount-sysroot.service`
     # can cleanly distinguish between the two.
     add_requires ignition-subsequent.target initrd.target
+    if ! command -v is-live-image >/dev/null || ! is-live-image; then
+        add_requires ignition-diskful-subsequent.target ignition-subsequent.target
+    fi
 fi
-
-# Write ignition-setup.service customized for PXE/ISO or regular boot
-cat > ${UNIT_DIR}/ignition-setup.service <<EOF
-[Unit]
-Description=Ignition (setup)
-DefaultDependencies=false
-Before=initrd.target
-
-# Make sure if ExecStart= fails, the boot fails
-OnFailure=emergency.target
-OnFailureJobMode=isolate
-
-Requires=local-fs-pre.target
-Before=local-fs-pre.target
-Before=ignition-disks.service
-Before=ignition-files.service
-
-Requires=dev-disk-by\x2dlabel-boot.device
-After=dev-disk-by\x2dlabel-boot.device
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-EnvironmentFile=/run/ignition.env
-# The MountFlags=slave is so the umount of /boot is guaranteed to happen
-# /boot will only be mounted for the lifetime of the unit.
-MountFlags=slave
-ExecStart=/usr/sbin/ignition-setup
-EOF
 
 RANDOMIZE_DISK_GUID=$(cmdline_arg coreos.randomize_disk_guid)
 if [ -n "$RANDOMIZE_DISK_GUID" ]; then
