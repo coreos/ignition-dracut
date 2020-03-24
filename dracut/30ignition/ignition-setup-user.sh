@@ -17,7 +17,7 @@ mkdir -p $destination
 if command -v is-live-image >/dev/null && is-live-image; then
     # Live image. If the user has supplied a config.ign via an appended
     # initrd, put it in the right place.
-    copy_file_if_exists "/config.ign" "${destination}/user.ign"
+    copy_file_if_exists "/config.ign" "/run/ignition.json"
 else
     # We will support a user embedded config in the boot partition
     # under $bootmnt/ignition/config.ign. Note that we mount /boot
