@@ -47,6 +47,10 @@ install() {
     # module directory.
     inst_simple "$moddir/ignition" \
         "/usr/bin/ignition"
+    inst_script "$moddir/ignition-setup-base.sh" \
+        "/usr/sbin/ignition-setup-base"
+    inst_script "$moddir/ignition-setup-user.sh" \
+        "/usr/sbin/ignition-setup-user"
 
     inst_simple "$moddir/ignition-generator" \
         "$systemdutildir/system-generators/ignition-generator"
@@ -59,7 +63,8 @@ install() {
             "$systemdsystemunitdir/ignition-$x.target"
     done
 
-    install_ignition_unit ignition-setup.service ignition-diskful.target
+    install_ignition_unit ignition-setup-base.service
+    install_ignition_unit ignition-setup-user.service
     install_ignition_unit ignition-fetch.service
     install_ignition_unit ignition-disks.service
     install_ignition_unit ignition-mount.service
