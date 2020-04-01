@@ -67,6 +67,10 @@ oemid=$(cmdline_arg coreos.oem.id)
 # Compatibility Ignition 2 (impl spec 3) as created by coreos-assembler
 if [ -z "${oemid}" ]; then
     platformid=$(cmdline_arg ignition.platform.id)
+    if [ -n "${platformid}" ]; then
+        echo "PLATFORM_ID=${platformid}" >> /run/ignition.env
+    fi
+
     case "${platformid}" in
         aws) oemid=ec2;;
         gcp) oemid=gce;;
@@ -74,4 +78,4 @@ if [ -z "${oemid}" ]; then
     esac
 fi
 
-echo "OEM_ID=${oemid}" > /run/ignition.env
+echo "OEM_ID=${oemid}" >> /run/ignition.env
