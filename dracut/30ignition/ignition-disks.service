@@ -17,9 +17,7 @@ After=basic.target
 Before=initrd-root-fs.target
 Before=sysroot.mount
 
-# Run after ignition-setup has run because ignition-setup
-# may copy in new/different ignition configs for us to consume.
-After=ignition-setup.service
+After=ignition-fetch.service
 
 # Network may be used to fetch userdata content.
 After=network.target
