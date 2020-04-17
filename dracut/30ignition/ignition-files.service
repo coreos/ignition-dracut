@@ -11,10 +11,6 @@ OnFailureJobMode=isolate
 Requires=initrd-root-fs.target
 After=initrd-root-fs.target
 
-# Run after ignition-setup has run because ignition-setup
-# may copy in new/different ignition configs for us to consume.
-After=ignition-setup.service
-
 # Make sure root filesystem is mounted read-write
 Requires=ignition-remount-sysroot.service
 After=ignition-remount-sysroot.service
