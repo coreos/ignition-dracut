@@ -34,9 +34,6 @@ install() {
     # This one is optional; https://src.fedoraproject.org/rpms/ignition/pull-request/9
     inst_multiple -o mkfs.btrfs
 
-    inst_script "$moddir/ignition-setup.sh" \
-        "/usr/sbin/ignition-setup"
-
     inst_script "$moddir/coreos-teardown-initramfs-network.sh" \
 	"/usr/sbin/coreos-teardown-initramfs-network"
 
