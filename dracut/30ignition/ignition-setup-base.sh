@@ -16,4 +16,6 @@ mkdir -p $destination
 
 # We will support grabbing a platform specific base.ign config
 # from the initrd at /usr/lib/ignition/platform/${PLATFORM_ID}/base.ign
-copy_file_if_exists "/usr/lib/ignition/platform/${PLATFORM_ID}/base.ign" "${destination}/base.ign"
+if [ -n "${PLATFORM_ID:-}" ]; then
+    copy_file_if_exists "/usr/lib/ignition/platform/${PLATFORM_ID}/base.ign" "${destination}/base.ign"
+fi
