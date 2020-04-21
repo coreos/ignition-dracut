@@ -53,8 +53,6 @@ Requires=dev-disk-by\x2dlabel-boot.device
 After=dev-disk-by\x2dlabel-boot.device
 EOF
     fi
-
-    add_requires coreos-teardown-initramfs-network.service ignition-complete.target
 else
     # If we're doing a non-Ignition (subsequent) boot, then
     # queue a different target.  This is necessary so that units
