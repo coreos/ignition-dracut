@@ -34,9 +34,6 @@ install() {
     # This one is optional; https://src.fedoraproject.org/rpms/ignition/pull-request/9
     inst_multiple -o mkfs.btrfs
 
-    inst_script "$moddir/coreos-teardown-initramfs-network.sh" \
-	"/usr/sbin/coreos-teardown-initramfs-network"
-
 #   inst_script "$moddir/retry-umount.sh" \
 #       "/usr/sbin/retry-umount"
 
@@ -52,13 +49,16 @@ install() {
     inst_simple "$moddir/ignition-generator" \
         "$systemdutildir/system-generators/ignition-generator"
 
-    inst_simple "$moddir/coreos-teardown-initramfs-network.service" \
-        "$systemdutildir/system/coreos-teardown-initramfs-network.service"
-
     for x in "complete" "subsequent" "diskful" "diskful-subsequent"; do
         inst_simple "$moddir/ignition-$x.target" \
             "$systemdsystemunitdir/ignition-$x.target"
     done
+
+    # For consistency tear down the network between the initramfs and
+    # real root. See https://github.com/coreos/fedora-coreos-tracker/issues/394#issuecomment-599721763
+    inst_script "$moddir/coreos-teardown-initramfs-network.sh" \
+        "/usr/sbin/coreos-teardown-initramfs-network"
+    install_ignition_unit coreos-teardown-initramfs-network.service
 
     install_ignition_unit ignition-setup-base.service
     install_ignition_unit ignition-setup-user.service
@@ -71,8 +71,6 @@ install() {
 
     # needed for openstack config drive support
     inst_rules 60-cdrom_id.rules
-
-    inst_hook pre-pivot 90 "$moddir/persist-ifcfg.sh"
 }
 
 has_fw_cfg_module() {
