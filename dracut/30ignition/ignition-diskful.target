@@ -7,6 +7,9 @@ Documentation=https://github.com/coreos/ignition
 ConditionPathExists=/etc/initrd-release
 Before=ignition-complete.target
 
+Requires=boot.mount
+After=boot.mount
+
 # Make sure we stop all the units before switching root
 Conflicts=initrd-switch-root.target umount.target
 Conflicts=dracut-emergency.service emergency.service emergency.target
