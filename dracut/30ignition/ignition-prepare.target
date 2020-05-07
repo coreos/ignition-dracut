@@ -13,6 +13,8 @@ Before=initrd.target
 Before=ignition-diskful.target
 Before=ignition-complete.target
 
+Before=multipathd.service
+
 # initrd.target has OnFailureJobMode=replace-irreversibly, which seems to
 # cause unit restart loops in the initramfs if one of our units fails.  Thus
 # we intercept Ignition unit failures here and isolate to emergency.target.
