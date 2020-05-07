@@ -2,8 +2,6 @@
 Description=Ignition Boot Mount
 Documentation=https://github.com/coreos/ignition
 
-Before=ignition-diskful.target
-
 # Make sure that the device exists
 Requires=dev-disk-by\x2dlabel-boot.device
 After=dev-disk-by\x2dlabel-boot.device

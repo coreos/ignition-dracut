@@ -4,7 +4,6 @@ Documentation=https://github.com/coreos/ignition
 ConditionPathExists=/etc/initrd-release
 DefaultDependencies=false
 Before=ignition-complete.target
-After=ignition-fetch.service
 
 # This stage runs between `basic.target` and `initrd-root-device.target`,
 # see https://www.freedesktop.org/software/systemd/man/bootup.html

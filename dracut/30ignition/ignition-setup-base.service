@@ -2,12 +2,12 @@
 Description=Ignition (setup base config)
 Documentation=https://github.com/coreos/ignition
 ConditionPathExists=/etc/initrd-release
+ConditionPathExists=/run/ignition.env
+
 DefaultDependencies=false
 Before=ignition-complete.target
-
+Before=ignition-prepare.target
 Before=local-fs-pre.target
-Before=ignition-disks.service
-Before=ignition-files.service
 
 [Service]
 Type=oneshot

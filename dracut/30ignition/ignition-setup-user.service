@@ -3,11 +3,7 @@ Description=Ignition (setup user config)
 Documentation=https://github.com/coreos/ignition
 ConditionPathExists=/etc/initrd-release
 DefaultDependencies=false
-Before=ignition-complete.target
-
-Before=local-fs-pre.target
-Before=ignition-disks.service
-Before=ignition-files.service
+Before=ignition-prepare.target
 
 [Service]
 Type=oneshot

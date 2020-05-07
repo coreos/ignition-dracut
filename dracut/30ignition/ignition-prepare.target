@@ -1,0 +1,28 @@
+# This target is reached when Ignition is done being prepeared. This
+# activated *only* on first boot (or if ignition.firstboot=1 is provided).
+# Thus, it is also an API for units to use so that they are activated only on
+# first boot. Simply add a link under ignition-prepare.target.requires in the
+# initrd.
+
+[Unit]
+Description=Ignition Prepare
+Documentation=https://github.com/coreos/ignition
+ConditionPathExists=/etc/initrd-release
+Before=local-fs-pre.target
+Before=initrd.target
+Before=ignition-diskful.target
+Before=ignition-complete.target
+
+# initrd.target has OnFailureJobMode=replace-irreversibly, which seems to
+# cause unit restart loops in the initramfs if one of our units fails.  Thus
+# we intercept Ignition unit failures here and isolate to emergency.target.
+# https://github.com/coreos/ignition-dracut/issues/115
+OnFailure=emergency.target
+OnFailureJobMode=isolate
+
+# Prepare and then unload.
+Conflicts=ignition-diskful.target ignition-complete.target
+
+# Make sure we stop all the units before switching root
+Conflicts=initrd-switch-root.target umount.target
+Conflicts=dracut-emergency.service emergency.service emergency.target

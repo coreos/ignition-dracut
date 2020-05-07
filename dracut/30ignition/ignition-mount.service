@@ -21,6 +21,7 @@ After=ignition-remount-sysroot.service
 
 # This is guaranteed through After=initrd-root-fs.target but just to
 # be explicit.
+Requires=ignition-disks.service
 After=ignition-disks.service
 
 [Service]
