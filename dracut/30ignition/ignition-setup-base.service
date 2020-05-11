@@ -5,9 +5,9 @@ ConditionPathExists=/etc/initrd-release
 DefaultDependencies=false
 Before=ignition-complete.target
 
-Before=local-fs-pre.target
-Before=ignition-disks.service
-Before=ignition-files.service
+Before=ignition-diskful.target
+Before=dracut-initqueue.service
+After=dracut-cmdline.service
 
 [Service]
 Type=oneshot

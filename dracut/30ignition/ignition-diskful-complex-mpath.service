@@ -1,0 +1,33 @@
+[Unit]
+Description=Ignition Diskful Complex Devices Multipath
+Documentation=https://github.com/coreos/ignition
+
+Before=ignition-diskful.target
+Before=ignition-diskful-subsequent.target
+Before=ignition-subsequent.target
+
+After=ignition-setup-user.service
+After=ignition-setup-base.service
+
+ConditionPathExists=/etc/multipath.conf
+ConditionKernelCommandLine=!nompath
+ConditionKernelCommandLine=!rd.multipath=0
+ConditionKernelCommandLine=!rd_NO_MULTIPATH
+ConditionKernelCommandLine=!multipath=off
+
+# Wait for multipathd
+Wants=multipathd.service
+After=multipathd.service
+
+# We need sysinit.target to be ready in order to use udev
+# triggers. Otherwise triggering will have no effect.
+Requires=sysinit.target systemd-udevd.service
+After=sysinit.target systemd-udevd.service systemd-udev-settle.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Have to shell out since we need shell expansion of the *
+# We wait to settle the devices to ensure that the symlinks are created
+# before proceeding.
+ExecStart=-/bin/sh -c '/usr/bin/udevadm trigger --settle --verbose /dev/dm*'

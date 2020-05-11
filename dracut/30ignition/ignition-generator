@@ -68,4 +68,9 @@ else
     fi
 fi
 
+if $(cmdline_bool 'rd.multipath' 0); then
+    add_requires ignition-diskful-complex-mpath.service ignition-diskful.target
+    add_requires ignition-diskful-complex-mpath.service ignition-diskful-subsequent.target
+fi
+
 echo "PLATFORM_ID=$(cmdline_arg ignition.platform.id)" > /run/ignition.env
