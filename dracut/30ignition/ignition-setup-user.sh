@@ -23,10 +23,5 @@ else
     # under $bootmnt/ignition/config.ign. Note that we mount /boot
     # but we don't unmount boot because we are run in a systemd unit
     # with MountFlags=slave so it is unmounted for us.
-    bootmnt=/mnt/boot_partition
-    mkdir -p $bootmnt
-    # mount as read-only since we don't strictly need write access and we may be
-    # running alongside other code that also has it mounted ro
-    mount -o ro /dev/disk/by-label/boot $bootmnt
-    copy_file_if_exists "${bootmnt}/ignition/config.ign" "${destination}/user.ign"
+    copy_file_if_exists /boot/ignition/config.ign "${destination}/user.ign"
 fi

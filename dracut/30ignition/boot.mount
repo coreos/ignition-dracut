@@ -1,0 +1,15 @@
+[Unit]
+Description=Ignition Boot Mount
+Documentation=https://github.com/coreos/ignition
+
+# Make sure that the device exists
+Requires=dev-disk-by\x2dlabel-boot.device
+After=dev-disk-by\x2dlabel-boot.device
+
+# Shut down before switch-root
+Conflicts=initrd-switch-root.service
+
+[Mount]
+What=/dev/disk/by-label/boot
+Where=/boot
+Options=ro
