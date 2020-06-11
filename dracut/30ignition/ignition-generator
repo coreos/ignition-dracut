@@ -45,7 +45,8 @@ if $(cmdline_bool 'ignition.firstboot' 0); then
 
     # Invoke distro hook for detecting whether we're booted from a live image,
     # and therefore won't have a root disk.
-    if ! command -v is-live-image >/dev/null || ! is-live-image; then
+    if ! test -f /etc/coreos-legacy-installer-initramfs && \
+            (! command -v is-live-image >/dev/null || ! is-live-image); then
         add_requires ignition-diskful.target ignition-complete.target
 
         # ignition-setup-user.service should depend on the boot device node
@@ -65,7 +66,8 @@ else
     # like `ignition-ostree-mount-sysroot.service`
     # can cleanly distinguish between the two.
     add_requires ignition-subsequent.target initrd.target
-    if ! command -v is-live-image >/dev/null || ! is-live-image; then
+    if ! test -f /etc/coreos-legacy-installer-initramfs && \
+            (! command -v is-live-image >/dev/null || ! is-live-image); then
         add_requires ignition-diskful-subsequent.target ignition-subsequent.target
     fi
 fi
