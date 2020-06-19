@@ -1,0 +1,49 @@
+#!/bin/bash
+# -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# ex: ts=8 sw=4 sts=4 et filetype=sh
+
+set -e
+
+# Generators don't have logging right now
+# https://github.com/systemd/systemd/issues/15638
+exec 1>/dev/kmsg; exec 2>&1
+
+UNIT_DIR="${1:-/tmp}"
+
+cmdline=( $(</proc/cmdline) )
+karg() {
+    local name="$1" value="$2"
+    for arg in "${cmdline[@]}"; do
+        if [[ "${arg%%=*}" == "${name}" ]]; then
+            value="${arg#*=}"
+        fi
+    done
+    echo "${value}"
+}
+
+karg_bool() {
+    local value=$(karg "$@")
+    case "$value" in
+        ""|0|no|off) return 1;;
+        *) return 0;;
+    esac
+}
+
+# If coreos.autologin=1 inject the systemd conf, if not check if
+# the old conf exists and delete it. We don't want this to persist
+# across reboots because this is just for debugging purposes only.
+# Whenever needed the cmdline can be modified to add this arg to
+# autologin.
+if karg_bool coreos.autologin; then
+    mkdir -p "${UNIT_DIR}/serial-getty@ttyS0.service.d"
+    cat > "${UNIT_DIR}/serial-getty@ttyS0.service.d/autologin.conf" <<EOF
+[Service]
+TTYVTDisallocate=no
+ExecStart=
+ExecStart=-/usr/sbin/agetty --autologin core --noclear %I $TERM
+EOF
+else
+    if [ -d "${UNIT_DIR}/serial-getty@ttyS0.service.d" ]; then
+        rm -rf "${UNIT_DIR}/serial-getty@ttyS0.service.d"
+    fi
+fi
