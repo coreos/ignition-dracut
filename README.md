@@ -1,9 +1,9 @@
 # ARCHIVED
 
 **This repository is now archived. The dracut modules are now
-in tree as of ignition [v2.5.0](https://github.com/coreos/ignition/commit/77ddd5a0eab60604f8b04dee539a14bded771620).**
+in-tree as of Ignition [v2.5.0](https://github.com/coreos/ignition/commit/77ddd5a0eab60604f8b04dee539a14bded771620).**
 
-Please submit any dracut modules to [ignition](https://github.com/coreos/ignition).
+Please submit any dracut modules to [Ignition](https://github.com/coreos/ignition).
 
 # ignition-dracut for Fedora CoreOS
 
